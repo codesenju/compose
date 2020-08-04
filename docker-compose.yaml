@@ -1,0 +1,27 @@
+version: '2'
+services:
+  compose:
+    image: docker/compose
+    depends_on: 
+      - docker
+    restart: always
+    environment:
+      - DOCKER_HOST=tcp://docker-child:2375
+    container_name: docker
+    networks: 
+      devops:
+        aliases:
+          - compose
+  docker:
+    image: docker:18.09-dind
+    restart: always
+    privileged: true
+    ports:
+      - 2375:2375
+    container_name: docker-child
+    networks: 
+      devops:
+        aliases:
+          - docker-child
+networks:
+  devops:
